@@ -13,7 +13,35 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());
+// CORS CONFIGURATION
+const ALLOWED_FRONTEND_URL = (
+  process.env.FRONTEND_URL || 'https://gym-test-beige.vercel.app'
+).replace(/\/$/, '');
 
+app.use((req: Request, res: Response, next: NextFunction): void => {
+  const origin = req.headers.origin;
+
+  if (origin && origin.replace(/\/$/, '') === ALLOWED_FRONTEND_URL) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+  }
+
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'GET, POST, PUT, PATCH, DELETE, OPTIONS'
+  );
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization'
+  );
+
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(204);
+    return;
+  }
+
+  next();
+});
 // =========================================================================
 // SECURITY & CRYPTOGRAPHY UTILITIES
 // =========================================================================
