@@ -40,7 +40,7 @@ export default function App() {
   useEffect(() => {
     const savedToken = localStorage.getItem('wfit_auth_token');
     if (savedToken) {
-      fetch('/api/auth/me', {
+      fetch( `${import.meta.env.VITE_API_BASE_URL}/api/auth/me`, {
         headers: { 'Authorization': `Bearer ${savedToken}` }
       })
       .then(res => res.ok ? res.json() : Promise.reject())
@@ -73,7 +73,7 @@ export default function App() {
   const handleLogout = async () => {
     if (authToken) {
       try {
-        await fetch('/api/auth/logout', {
+        await fetch( `${import.meta.env.VITE_API_BASE_URL}/api/auth/logout`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
